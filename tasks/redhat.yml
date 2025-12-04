@@ -1,0 +1,35 @@
+---
+- name: Install dependencies
+  ansible.builtin.dnf:
+    name: "{{ postgresql_dnf_dependencies }}"
+    state: present
+    update_cache: true
+
+- name: Add postgresql repo gpg key
+  ansible.builtin.rpm_key:
+    key: "{{ postgresql_dnf_repo_key_url }}"
+    state: present
+
+- name: Add postgresql repo
+  ansible.builtin.dnf:
+    name: "{{ postgresql_dnf_repo_url }}"
+    state: present
+    update_cache: true
+
+# - name: Disable built-in postgresql module
+#   ansible.builtin.command:
+#     cmd: dnf -qy module disable postgresql
+#   register: postgresql_disable_module
+#   changed_when: postgresql_disable_module.rc == 0
+#   failed_when: postgresql_disable_module.rc not in [0,1]
+
+- name: Install postgresql
+  ansible.builtin.dnf:
+    name: "{{ postgresql_dnf_install_pkgs }}"
+    state: present
+  notify: Restart postgresql
+
+- name: Init database
+  ansible.builtin.command:
+    cmd: /usr/pgsql-{{ postgresql_version }}/bin/postgresql-{{ postgresql_version }}-setup initdb
+    creates: /var/lib/pgsql/{{ postgresql_version }}/data/postgresql.conf

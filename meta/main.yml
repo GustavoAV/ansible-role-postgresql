@@ -1,0 +1,22 @@
+---
+dependencies: []
+
+galaxy_info:
+  role_name: postgresql
+  author: gustavoav
+  description: Postgresql for Linux
+  license: MIT
+  min_ansible_version: "2.10"
+  platforms:
+    - name: Rocky
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+  galaxy_tags:
+    - system
+    - database
+    - postgresql
+    - server

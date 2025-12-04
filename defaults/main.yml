@@ -1,0 +1,34 @@
+---
+postgresql_version: 18
+
+postgresql_apt_dependencies:
+  - curl
+  - ca-certificates
+
+postgresql_apt_keyring_file_path: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
+
+postgresql_apt_repo_key_url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+
+postgresql_apt_repo_string: >
+  deb [signed-by={{ postgresql_apt_keyring_file_path }}]
+  https://apt.postgresql.org/pub/repos/apt {{ postgresql_distro_codename.stdout }}-pgdg main
+
+postgresql_apt_install_pkgs: postgresql-{{ postgresql_version }}
+
+postgresql_dnf_dependencies:
+  - gnupg2
+
+postgresql_dnf_repo_key_url: https://download.postgresql.org/pub/repos/yum/keys/PGDG-RPM-GPG-KEY-RHEL
+
+postgresql_dnf_repo_url: https://download.postgresql.org/pub/repos/yum/reporpms/EL-{{ ansible_facts['distribution_major_version'] }}-{{ ansible_facts['machine'] }}/pgdg-redhat-repo-latest.noarch.rpm
+
+postgresql_dnf_install_pkgs: postgresql{{ postgresql_version }}-server
+
+postgresql_service_name: >-
+  {%- if ansible_os_family == 'RedHat' -%}
+    postgresql-{{ postgresql_version }}
+  {%- else -%}
+    postgresql
+  {%- endif -%}
+
+postgresql_readiness_cmd: pg_isready -U postgresql -h 127.0.0.1 -p 5432

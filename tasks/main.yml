@@ -1,0 +1,23 @@
+---
+- name: Include OS specific tasks
+  ansible.builtin.include_tasks:
+    file: "{{ ansible_facts['os_family'] | lower }}.yml"
+
+- name: Start and enable postgresql
+  ansible.builtin.service:
+    name: "{{ postgresql_service_name }}"
+    state: started
+    enabled: true
+
+- name: Apply notified handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Awaits postgresql availability
+  ansible.builtin.command:
+    cmd: "{{ postgresql_readiness_cmd }}"
+  register: postgresql_status
+  delay: 10
+  retries: 12
+  until: postgresql_status.rc == 0
+  changed_when: false
+  failed_when: postgresql_status.rc != 0 and postgresql_status.rc != 2
