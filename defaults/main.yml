@@ -25,7 +25,7 @@ postgresql_dnf_repo_url: https://download.postgresql.org/pub/repos/yum/reporpms/
 postgresql_dnf_install_pkgs: postgresql{{ postgresql_version }}-server
 
 postgresql_service_name: >-
-  {%- if ansible_os_family == 'RedHat' -%}
+  {%- if ansible_facts['os_family'] == 'RedHat' -%}
     postgresql-{{ postgresql_version }}
   {%- else -%}
     postgresql

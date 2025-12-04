@@ -16,6 +16,8 @@ Requirements for using this role:
 
 ## Usage
 
+> The `defaults/main.yml` file has all the available parameters and their usage descriptions.
+
 Create a `requirements.yml` file with the content below and install with `ansible-galaxy install -r requirements.yml`.
 
 ```yaml
